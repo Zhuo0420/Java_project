@@ -5,8 +5,11 @@ import java.awt.event.*;
 public class GamePanel  extends JFrame {
     public GamePanel(){
         super("某某遊戲");//名字...?
+        setLayout(new BorderLayout());
         player character =new player();
-        add(character);
+        MenueTable m=new MenueTable();
+        add(character, BorderLayout.CENTER);
+        add(m, BorderLayout.NORTH);
     }
     
     public static void main(String[] args)  {

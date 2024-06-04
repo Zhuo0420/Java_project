@@ -9,16 +9,16 @@ import java.awt.event.KeyListener;
 public class player extends JPanel implements KeyListener{
     private ImageIcon player_img;
     private int x,y;
-    private int Map_y=550;//不知道大小是多少.....
+    private int Mapheight=550;//不知道大小是多少.....
+    private int Mapwidth;
     public player(){
         player_img = new ImageIcon("blue1.gif");
-        setFocusable(true);
+        setFocusable(true);//呼叫setFocusable(true)使得Player面板能夠接收鍵盤事件。
         addKeyListener(this);
 
         //初始位子:右下
         x=5;
-        y=Map_y;
-        System.out.println(y);
+        y=Mapheight;
        
     }
     public void paint(Graphics g) {
