@@ -2,9 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class GamePanel  extends JFrame{
+public class GamePanel  extends JFrame {
     public GamePanel(){
         super("某某遊戲");//名字...?
+        player character =new player();
+        add(character);
     }
     
     public static void main(String[] args)  {
@@ -12,7 +14,7 @@ public class GamePanel  extends JFrame{
 
         //空白的視窗
         app.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        app.setSize(300,300);  
+        app.setSize(1200,600);  
         app.setVisible(true); 
     }
   
