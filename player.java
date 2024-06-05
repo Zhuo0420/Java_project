@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
 public class player extends JPanel implements KeyListener{
     private ImageIcon player_img;
     private int x,y;
-    private int Mapheight=500;//不知道大小是多少.....
+    private int Mapheight=450;//不知道大小是多少.....
     private int Mapwidth;
     public player(){
         player_img = new ImageIcon("blue1.gif");

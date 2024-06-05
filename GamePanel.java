@@ -6,10 +6,17 @@ public class GamePanel  extends JFrame {
     public GamePanel(){
         super("某某遊戲");//名字...?
         setLayout(new BorderLayout());
+
+       
+
         player character =new player();
         MenueTable m=new MenueTable();
+        store s=new store();
+        backpage b= new backpage();
         add(character, BorderLayout.CENTER);
         add(m, BorderLayout.NORTH);
+        add(s, BorderLayout.EAST);
+        add(b, BorderLayout.SOUTH);
 
         // 在所有元件新增完畢後請求焦點
         character.setFocusable(true);
