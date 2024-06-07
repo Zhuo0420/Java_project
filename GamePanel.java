@@ -1,41 +1,41 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
-public class GamePanel  extends JFrame {
-    public GamePanel(){
-        super("某某遊戲");//名字...?
+public class GamePanel extends JFrame {
+    public GamePanel() {
+        super("某某遊戲");
         setLayout(new BorderLayout());
 
-       
+        //monster m1 = new monster();
+        //player character = new player(m1);
+        player character = new player();
+        MenueTable m = new MenueTable();
+        store s = new store();
+        backpage b = new backpage();
 
-        player character =new player();
-        MenueTable m=new MenueTable();
-        store s=new store();
-        backpage b= new backpage();
-        add(character, BorderLayout.CENTER);
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(1100, 600));
+        character.setBounds(0, 0, 1100, 600);
+        //m1.setBounds(0, 0, 800, 600);
+
+        layeredPane.add(character, JLayeredPane.DEFAULT_LAYER);
+        //layeredPane.add(m1, JLayeredPane.PALETTE_LAYER);
+
+        add(layeredPane, BorderLayout.CENTER);
         add(m, BorderLayout.NORTH);
         add(s, BorderLayout.EAST);
         add(b, BorderLayout.SOUTH);
 
-        // 在所有元件新增完畢後請求焦點
-        character.setFocusable(true);
-        character.requestFocusInWindow();
-    }
-    
-    public static void main(String[] args)  {
-        GamePanel  app = new GamePanel ();
-
-        //空白的視窗
-        app.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        app.setSize(1200,600);  
-        app.setVisible(true); 
-
-        // 确保窗口可见后请求焦点 =>增加下面這幾行才角色和menue才都動的了
+        // 确保窗口可见后请求焦点
         SwingUtilities.invokeLater(() -> {
-            app.requestFocusInWindow();
-            app.getContentPane().getComponent(0).requestFocusInWindow(); // 直接请求Player组件的焦点
+            character.requestFocusInWindow();
         });
     }
-  
+
+    public static void main(String[] args) {
+        GamePanel app = new GamePanel();
+        app.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        app.setSize(1200, 600);
+        app.setVisible(true);
+    }
 }
