@@ -95,7 +95,7 @@ public class player extends JPanel {
         x = Math.max(0, Math.min(x, panelWidth - player_img.getIconWidth()));
         y = Math.max(0, Math.min(y, panelHeight - player_img.getIconHeight()));
 
-        System.out.println("x:" + x + " y:" + y);
+        System.out.println("x:" + x + " y:" + y);//玩家位置
         repaint();
         checkMonsterProximity();
     }
@@ -113,7 +113,7 @@ public class player extends JPanel {
 
     private void checkMonsterProximity() {
         // 檢查玩家位置是否在怪獸的位置+-50，如果是就追
-        System.out.println("monster x:"+m_y+"y:"+m_x);
+        System.out.println("monster x:"+m_y+"y:"+m_x);//怪獸位置
         if (Math.abs(x - m_x) <= 50 && Math.abs(y - m_y) <= 50) {
             startChasing(x, y);
         } else {
