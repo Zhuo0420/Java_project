@@ -15,7 +15,8 @@ public class GamePanel extends JFrame {
 
         //monster m1 = new monster();
         //player character = new player(m1);
-        player character = new player();
+        //player character = new player();
+        player character = new player(this);
         MenueTable m = new MenueTable();
         store s = new store();
         backpage b = new backpage();
@@ -66,11 +67,30 @@ public class GamePanel extends JFrame {
                 clip.open(audioStream);
                 clip.loop(Clip.LOOP_CONTINUOUSLY); // 设置循环播放
             } else {
-                System.err.println("找不到音乐文件: " + musicFilePath);
+                System.err.println("找不到音樂文件: " + musicFilePath);
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+    }
+
+    //玩家被怪獸追到後要跳出GAME OVER視窗
+    public void gameOver() {
+        if (clip != null) {
+            clip.stop();
+            clip.close();
+        }
+        JOptionPane.showMessageDialog(this, "Game Over!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0); 
+    }
+
+    public void gameWin() {
+        if (clip != null) {
+            clip.stop();
+            clip.close();
+        }
+        JOptionPane.showMessageDialog(this, "You Win!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0); // 确保程序退出
     }
 
     public static void main(String[] args) {

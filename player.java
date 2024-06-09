@@ -14,8 +14,23 @@ public class player extends JPanel {
     private int targetX, targetY; // 目標位置
     private Timer chaseTimer; // 計時器，用於追蹤玩家
 
+    private GamePanel gamePanel; // 引用GamePanel实例
+
+    // 地圖//只是隨便加一個地圖試試
+    private int[][] map = {
+        {0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2},
+        {0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0},
+        {0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+    };
+    private int cellSize = 40; // 每個地圖單元格的大小
+
     //public player(monster m1) {
-    public player() {
+    //public player() {
+    public player(GamePanel gamePanel) {
+        this.gamePanel = gamePanel; // 保存GamePanel实例
         setFocusable(true);// 使面板能夠接收事件
         setLayout(null);
         setBackground(Color.GREEN);//只是讓我們方便看現在的地圖範圍而已
@@ -30,16 +45,19 @@ public class player extends JPanel {
         }
 
         //玩家的初始位置:右下角
-        x = 10;
-        y = 460;
+        //x = 10;
+        //y = 460;
+        // 玩家初始位置:地圖的左上角
+        x = 0;
+        y = 0;
 
         // 使用KeyBindings处理键盘事件
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"), "moveUp");
         getActionMap().put("moveUp", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                y -= 5;
-                updatePosition();
+                //y -= 5;
+                movePlayer(0, -1);
             }
         });
 
@@ -47,8 +65,8 @@ public class player extends JPanel {
         getActionMap().put("moveDown", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                y += 5;
-                updatePosition();
+                //y += 5;
+                movePlayer(0, 1);
             }
         });
 
@@ -56,8 +74,8 @@ public class player extends JPanel {
         getActionMap().put("moveLeft", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                x -= 5;
-                updatePosition();
+                //x -= 5;
+                movePlayer(-1, 0);
             }
         });
 
@@ -65,8 +83,8 @@ public class player extends JPanel {
         getActionMap().put("moveRight", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                x += 5;
-                updatePosition();
+                //x += 5;
+                movePlayer(1, 0);
             }
         });
 
@@ -82,20 +100,43 @@ public class player extends JPanel {
         //setFocusable(true); // 使面板能夠接收事件
 
         // 初始化怪獸位置
-        m_x = 300;
-        m_y = 300;
+        //m_x = 300;
+        //m_y = 300;
+        m_x=7;
+        m_y=5;
 
         // 初始化計時器，每100毫秒執行一次chase方法
         chaseTimer = new Timer(100, e -> chase());
     }
 
     //玩家------------------------------------------------------
+      // 移動玩家
+      private void movePlayer(int dx, int dy) {
+        int newX = x + dx ;
+        int newY = y + dy ;
+
+        // 確保玩家在範圍內並且不會走到牆上
+        if (newX >= 0 && newX < map[0].length && newY >= 0 && newY < map.length && map[newY][newX] != 1) {
+            x = newX;
+            y = newY;
+
+            // 檢查是否到達終點
+            if (map[y][x] == 2) {
+                gamePanel.gameWin();
+            }
+
+            System.out.println("x:" + x + " y:" + y); // 玩家位置
+            repaint();
+            checkMonsterProximity();
+        }
+    }
+
     private void updatePosition() {
         // 確保玩家在範圍內
-        x = Math.max(0, Math.min(x, panelWidth - player_img.getIconWidth()));
-        y = Math.max(0, Math.min(y, panelHeight - player_img.getIconHeight()));
+        //x = Math.max(0, Math.min(x, panelWidth - player_img.getIconWidth()));
+        //y = Math.max(0, Math.min(y, panelHeight - player_img.getIconHeight()));
 
-        System.out.println("x:" + x + " y:" + y);//玩家位置
+        //System.out.println("x:" + x + " y:" + y);//玩家位置
         repaint();
         checkMonsterProximity();
     }
@@ -105,16 +146,33 @@ public class player extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Insets ins = getInsets();
-        player_img.paintIcon(this, g, x + ins.left, y + ins.top);
-        monster_img.paintIcon(this, g, m_x + ins.left, m_y + ins.top);
+
+        // 繪製地圖
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == 1) {
+                    g.setColor(Color.BLACK);
+                } else if (map[i][j] == 2) {
+                    g.setColor(Color.RED);
+                } else {
+                    g.setColor(Color.WHITE);
+                }
+                g.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                g.setColor(Color.GRAY);
+                g.drawRect(j * cellSize, i * cellSize, cellSize, cellSize);
+            }
+        }
+
+        player_img.paintIcon(this, g, x*cellSize + ins.left, y*cellSize + ins.top);
+        monster_img.paintIcon(this, g, m_x*cellSize + ins.left, m_y*cellSize + ins.top);
     }
 
     //怪獸的-------------------------------------------------------------
 
     private void checkMonsterProximity() {
-        // 檢查玩家位置是否在怪獸的位置+-50，如果是就追
+        // 檢查玩家位置是否在怪獸的位置+-1，如果是就追
         System.out.println("monster x:"+m_y+"y:"+m_x);//怪獸位置
-        if (Math.abs(x - m_x) <= 50 && Math.abs(y - m_y) <= 50) {
+        if (Math.abs(x - m_x) <= 2 && Math.abs(y - m_y) <= 2) {
             startChasing(x, y);
         } else {
             stopChasing();
@@ -137,15 +195,22 @@ public class player extends JPanel {
     // 追蹤方法，更新怪獸位置
     private void chase() {
         if (m_x < targetX) {
-            m_x += 5;
+            m_x += 1;
         } else if (m_x > targetX) {
-            m_x -= 5;
+            m_x -= 1;
         }
 
         if (m_y < targetY) {
-            m_y += 5;
+            m_y += 1;
         } else if (m_y > targetY) {
-            m_y -= 5;
+            m_y -= 1;
+        }
+
+        // 檢查怪獸是否抓住玩家
+         // 檢查怪獸是否抓住玩家
+        if (m_x == x && m_y == y) {
+            repaint();
+            gamePanel.gameOver(); // 调用GamePanel中的gameOver方法
         }
 
         repaint(); // 重畫面板
