@@ -9,13 +9,28 @@ import java.awt.event.WindowEvent;
 
 public class GamePanel extends JFrame {
     private Clip clip;
-    public GamePanel() {
-        super("某某遊戲");
-        setLayout(new BorderLayout());
+    private JPanel homePanel;
+    private JPanel gamePanel;
+    private CardLayout cardLayout;
 
-        //monster m1 = new monster();
-        //player character = new player(m1);
-        //player character = new player();
+    public GamePanel() {
+        super("某某游戏");
+        cardLayout = new CardLayout();
+        setLayout(cardLayout);
+
+        homePanel = new HomePanel(this);
+        gamePanel = new JPanel(new BorderLayout());
+
+        add(homePanel, "Home");
+        add(gamePanel, "Game");
+
+        // 初始化游戏面板
+        initGamePanel();
+    }
+
+    private void initGamePanel() {
+        // monster m1 = new monster();
+        // player character = new player(m1);
         player character = new player(this);
         MenueTable m = new MenueTable();
         store s = new store();
@@ -24,27 +39,26 @@ public class GamePanel extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(1100, 600));
         character.setBounds(0, 0, 1100, 600);
-        //m1.setBounds(0, 0, 800, 600);
+        // m1.setBounds(0, 0, 800, 600);
 
         layeredPane.add(character, JLayeredPane.DEFAULT_LAYER);
-        //layeredPane.add(m1, JLayeredPane.PALETTE_LAYER);
+        // layeredPane.add(m1, JLayeredPane.PALETTE_LAYER);
 
-        add(layeredPane, BorderLayout.CENTER);
-        add(m, BorderLayout.NORTH);
-        add(s, BorderLayout.EAST);
-        add(b, BorderLayout.SOUTH);
+        gamePanel.add(layeredPane, BorderLayout.CENTER);
+        gamePanel.add(m, BorderLayout.NORTH);
+        gamePanel.add(s, BorderLayout.EAST);
+        gamePanel.add(b, BorderLayout.SOUTH);
 
-        // 确保窗口可见后请求焦点-------------------------------------------
-         SwingUtilities.invokeLater(() -> {
+        // 确保窗口可见后请求焦点
+        SwingUtilities.invokeLater(() -> {
             character.requestFocusInWindow();
         });
 
-
-        //音樂------------------------------------------------
-        //目前隨便抓的
+        // 音乐
+        // 目前随便抓的
         playBackgroundMusic("spacemusic.wav");
 
-        //當是窗關閉時，停止播放背景音樂
+        // 当窗口关闭时，停止播放背景音乐
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -55,7 +69,10 @@ public class GamePanel extends JFrame {
                 System.exit(0); // 确保程序退出
             }
         });
+    }
 
+    public void startGame() {
+        cardLayout.show(getContentPane(), "Game");
     }
 
     private void playBackgroundMusic(String musicFilePath) {

@@ -1,6 +1,10 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class player extends JPanel {
     private ImageIcon player_img;
@@ -16,6 +20,11 @@ public class player extends JPanel {
 
     private GamePanel gamePanel; // 引用GamePanel实例
 
+    private BufferedImage roadImage;
+    private BufferedImage wallImage;
+    private BufferedImage doorImage;
+
+
     // 地圖//只是隨便加一個地圖試試
     private int[][] map = {
         {0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2},
@@ -24,6 +33,7 @@ public class player extends JPanel {
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
     };
     private int cellSize = 40; // 每個地圖單元格的大小
 
@@ -103,10 +113,21 @@ public class player extends JPanel {
         //m_x = 300;
         //m_y = 300;
         m_x=7;
-        m_y=5;
+        m_y=6;
 
         // 初始化計時器，每100毫秒執行一次chase方法
         chaseTimer = new Timer(100, e -> chase());
+
+        
+        // 地圖圖片
+        try {
+            roadImage = ImageIO.read(new File("road_0000.png"));
+            wallImage = ImageIO.read(new File("wall_0014.png"));
+            doorImage = ImageIO.read(new File("door_0045.png"));
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     //玩家------------------------------------------------------
@@ -141,7 +162,7 @@ public class player extends JPanel {
         checkMonsterProximity();
     }
 
-    //畫玩家和怪獸---------------------------------------------------
+    //畫玩家和怪獸和地圖---------------------------------------------------
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -150,16 +171,15 @@ public class player extends JPanel {
         // 繪製地圖
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
+                BufferedImage img;
                 if (map[i][j] == 1) {
-                    g.setColor(Color.BLACK);
+                    img = wallImage;
                 } else if (map[i][j] == 2) {
-                    g.setColor(Color.RED);
+                    img=doorImage;
                 } else {
-                    g.setColor(Color.WHITE);
+                    img = roadImage;
                 }
-                g.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
-                g.setColor(Color.GRAY);
-                g.drawRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                g.drawImage(img, j * cellSize, i * cellSize, cellSize, cellSize, null);
             }
         }
 
@@ -170,7 +190,7 @@ public class player extends JPanel {
     //怪獸的-------------------------------------------------------------
 
     private void checkMonsterProximity() {
-        // 檢查玩家位置是否在怪獸的位置+-1，如果是就追
+        // 檢查玩家位置是否在怪獸的位置+-2，如果是就追
         System.out.println("monster x:"+m_y+"y:"+m_x);//怪獸位置
         if (Math.abs(x - m_x) <= 2 && Math.abs(y - m_y) <= 2) {
             startChasing(x, y);
@@ -206,7 +226,7 @@ public class player extends JPanel {
             m_y -= 1;
         }
 
-        // 檢查怪獸是否抓住玩家
+       
          // 檢查怪獸是否抓住玩家
         if (m_x == x && m_y == y) {
             repaint();
