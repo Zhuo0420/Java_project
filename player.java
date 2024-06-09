@@ -29,9 +29,9 @@ public class player extends JPanel {
     private int[][] map = {
         {0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2},
         {0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0},
-        {0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0},
+        {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0},
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
     };
@@ -115,8 +115,8 @@ public class player extends JPanel {
         m_x=7;
         m_y=6;
 
-        // 初始化計時器，每100毫秒執行一次chase方法
-        chaseTimer = new Timer(100, e -> chase());
+        // 初始化計時器，每500毫秒執行一次chase方法
+        chaseTimer = new Timer(500, e -> chase());
 
         
         // 地圖圖片
@@ -214,24 +214,30 @@ public class player extends JPanel {
 
     // 追蹤方法，更新怪獸位置
     private void chase() {
+        int orginal_m_x=m_x;
+        int orginal_m_y=m_y;
         if (m_x < targetX) {
             m_x += 1;
         } else if (m_x > targetX) {
             m_x -= 1;
         }
-
-        if (m_y < targetY) {
+        else if (m_y < targetY) {
             m_y += 1;
         } else if (m_y > targetY) {
             m_y -= 1;
         }
 
+        
        
          // 檢查怪獸是否抓住玩家
         if (m_x == x && m_y == y) {
             repaint();
             gamePanel.gameOver(); // 调用GamePanel中的gameOver方法
         }
+
+
+        //路變牆
+        map[orginal_m_y][orginal_m_x]=1;
 
         repaint(); // 重畫面板
     }
