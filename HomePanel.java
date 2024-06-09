@@ -22,7 +22,7 @@ public class HomePanel extends JPanel {
         add(layeredPane, BorderLayout.CENTER);
         
 
-        // 動畫
+        // 動畫:劇情?被卡車撞來到異世界，來找門回到現實????
         animationIcons = new ImageIcon[11];
         for (int i = 0; i < 11; i++) {
             animationIcons[i] = new ImageIcon(new ImageIcon(i + ".png").getImage().getScaledInstance(1000, 600, Image.SCALE_SMOOTH));

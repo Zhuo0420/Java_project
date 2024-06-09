@@ -8,7 +8,11 @@ import java.awt.event.KeyListener;
 public class MenueTable extends JPanel implements ActionListener {
     private JButton menuebtn,retrybtn,homebtn;
     private JDialog dialog=new JDialog();
-    public MenueTable(){
+    private GamePanel gamePanel;
+
+    public MenueTable(GamePanel gamePanel){
+        this.gamePanel = gamePanel;
+
         setFocusable(true);
         setLayout(new FlowLayout(FlowLayout.RIGHT));
 
@@ -31,7 +35,7 @@ public class MenueTable extends JPanel implements ActionListener {
         dialog.setLayout(new FlowLayout());
         //dialog.add(new JLabel("retry."));
 
-        //代做:重新按紐/退出........
+        //重新:retrybtn
         retrybtn=new JButton(new ImageIcon(new ImageIcon("retry_0673.png").getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH)));
         //retrybtn = new JButton(new ImageIcon("retry_0673.png"));
         retrybtn.setToolTipText("重新");
@@ -62,6 +66,14 @@ public class MenueTable extends JPanel implements ActionListener {
         if ( evt.getSource() == menuebtn ){
             //跳出選單視窗
                 dialog.setVisible(true);
+        }else if (evt.getSource() == homebtn) {
+            // 跳回主頁
+            gamePanel.showHomePanel();
+            dialog.setVisible(false);
+        }else if (evt.getSource() == retrybtn) {
+            // 重新開始遊戲
+            gamePanel.restartGame();
+            dialog.setVisible(false);
         }
      }
 

@@ -32,7 +32,7 @@ public class GamePanel extends JFrame {
         // monster m1 = new monster();
         // player character = new player(m1);
         player character = new player(this);
-        MenueTable m = new MenueTable();
+        MenueTable m = new MenueTable(this);
         store s = new store();
         backpage b = new backpage();
 
@@ -73,6 +73,20 @@ public class GamePanel extends JFrame {
 
     public void startGame() {
         cardLayout.show(getContentPane(), "Game");
+    }
+
+    //在menue按下home按鈕
+    public void showHomePanel() {
+        cardLayout.show(getContentPane(), "Home");
+    }
+
+    //在menue按下retry按鈕
+    public void restartGame() {
+        gamePanel.removeAll();
+        initGamePanel();
+        cardLayout.show(getContentPane(), "Game");
+        revalidate();
+        repaint();
     }
 
     private void playBackgroundMusic(String musicFilePath) {
