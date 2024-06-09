@@ -27,6 +27,7 @@ public class player extends JPanel {
     private BufferedImage treasureIMage;
     private BufferedImage treasureOpenIMage;
 
+    static private int coinSum = 0; // 玩家金幣總數量
 
     // 地圖//只是隨便加一個地圖試試
     //0:路  1:牆  2:門  3:寶箱
@@ -178,8 +179,17 @@ public class player extends JPanel {
         } else {
             // 獲得1~20元
             int coins = rand.nextInt(20) + 1;
+            coinSum += coins;
             JOptionPane.showMessageDialog(this, "你獲得了 " + coins + " 個金幣！");
+            System.out.println("coinSum: " + coinSum);
         }
+    }
+    static public int getCoinSum() {         // 獲取玩家金幣數量
+        System.out.println("get coinSum: " + coinSum);
+        return coinSum;
+    }
+    static public void setCoinSum(int coinSum) {         // 設置玩家金幣數量
+        player.coinSum = coinSum;
     }
     //寶箱怪動畫-----------------------------------------------------------
     private void showGameOverAnimation() {
