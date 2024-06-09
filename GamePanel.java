@@ -32,7 +32,7 @@ public class GamePanel extends JFrame {
         // monster m1 = new monster();
         // player character = new player(m1);
         player character = new player(this);
-        MenueTable m = new MenueTable(this);
+        MenueTable m = new MenueTable(this,character);
         store s = new store();
         backpage b = new backpage();
 

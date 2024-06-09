@@ -9,9 +9,10 @@ public class MenueTable extends JPanel implements ActionListener {
     private JButton menuebtn,retrybtn,homebtn;
     private JDialog dialog=new JDialog();
     private GamePanel gamePanel;
-
-    public MenueTable(GamePanel gamePanel){
+    private player p;
+    public MenueTable(GamePanel gamePanel,player p){
         this.gamePanel = gamePanel;
+        this.p=p;
 
         setFocusable(true);
         setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -73,6 +74,7 @@ public class MenueTable extends JPanel implements ActionListener {
         }else if (evt.getSource() == retrybtn) {
             // 重新開始遊戲
             gamePanel.restartGame();
+            p.CointoZero();//錢錢歸0
             dialog.setVisible(false);
         }
      }

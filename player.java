@@ -191,6 +191,9 @@ public class player extends JPanel {
     static public void setCoinSum(int coinSum) {         // 設置玩家金幣數量
         player.coinSum = coinSum;
     }
+    static public void CointoZero(){
+        player.coinSum = 0;
+    }
     //寶箱怪動畫-----------------------------------------------------------
     private void showGameOverAnimation() {
         JDialog dialog = new JDialog((Frame) null, "遊戲結束", true);
