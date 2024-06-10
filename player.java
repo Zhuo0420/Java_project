@@ -30,6 +30,8 @@ public class player extends JPanel {
     private BufferedImage doorImage;
     private BufferedImage treasureIMage;
     private BufferedImage treasureOpenIMage;
+    private BufferedImage playerIMage;
+    private BufferedImage playerDeadIMage;
 
     private int level_conut=1;
     static private int coinSum = 0; // 玩家金幣總數量
@@ -74,7 +76,7 @@ public class player extends JPanel {
 
         //關於玩家------------------------------------------------
         //this.m1 = m1;
-        player_img = new ImageIcon("blue1.gif");
+        player_img = new ImageIcon("player1.png");
 
         // 檢查玩家圖片是否加載成功
         if (player_img.getIconWidth() == -1) {
@@ -154,6 +156,9 @@ public class player extends JPanel {
             doorImage = ImageIO.read(new File("door_0045.png"));
             treasureIMage = ImageIO.read(new File("treasure_0089.png"));
             treasureOpenIMage = ImageIO.read(new File("treasureopen_0091.png"));
+            playerIMage=ImageIO.read(new File("player1.png"));
+            playerDeadIMage=ImageIO.read(new File("player_daed.png"));
+
             
             
             
@@ -395,10 +400,13 @@ public class player extends JPanel {
                 monster_y[i]--;
             }
 
-            map[o_y][o_x]=1;
+            if(i==0)map[o_y][o_x]=1;//怪獸1
+            else  map[o_y][o_x]=0;//怪獸-1
+            
 
             // 當怪物接觸到玩家
             if (monster_x[i] == x && monster_y[i] == y) {
+                //player_img = new ImageIcon("player_dead.png");
                 gamePanel.gameOver();
                 chaseTimer.stop();
                 break;
