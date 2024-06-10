@@ -6,8 +6,11 @@ import java.awt.event.ActionListener;
 public class backpage extends JPanel implements ActionListener{
     private JButton item1,item2;
 
-    static int item1Num = 0;
-    static int item2Num = 0;
+    int item1Num = 0;
+    int item2Num = 0;
+
+    boolean item1Used = false;
+    boolean item2Used = false;
 
     public backpage(){
         setFocusable(true);
@@ -26,26 +29,30 @@ public class backpage extends JPanel implements ActionListener{
         add(item2);
 
     }
+    
     public void actionPerformed(ActionEvent evt) {
         if ( evt.getSource() == item1 ){
             //可以使用道具1，按完後可以選擇使用的地方，使0變1
             if(item1Num > 0){
-                item1Num--;
-                
+                item1Used = true;                
             }
         }
         else if ( evt.getSource() == item2 ){
             //可以使用道具1，按完後可以選擇使用的地方，使1變0
-            if(item2Num > 0){
-                item2Num--;
-
+            if(item2Num > 0){                
+                item2Used = true;
             }
         }
+        
      }
-    public static void buyItem1(){
+    public void buyItem1(){
         item1Num++;
     }
-    public static void buyItem2(){
+    public void buyItem2(){
         item2Num++;
+    }
+    public void itemToZero(){
+        item1Num = 0;
+        item2Num = 0;
     }
 }

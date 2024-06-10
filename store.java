@@ -11,7 +11,10 @@ public class store extends JPanel implements ActionListener {
     private JButton item2; 
     private JLabel itemNum = new JLabel("item1: 0" + " item2: 0"); 
 
-    public store(){
+    private backpage backpage;      // 道具欄
+
+    public store(backpage backpage){
+        this.backpage = backpage;    // 道具欄
         setFocusable(true);
         setLayout(new FlowLayout(FlowLayout.RIGHT));        
         storebtn = new JButton(new ImageIcon("yellow1.gif"));       //商店按鈕

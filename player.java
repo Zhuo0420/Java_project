@@ -1,5 +1,8 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import org.w3c.dom.events.MouseEvent;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -20,6 +23,7 @@ public class player extends JPanel {
     private Timer chaseTimer; // 計時器，用於追蹤玩家
 
     private GamePanel gamePanel; // 引用GamePanel实例
+    private backpage backpage; // 引用backpage实例
 
     private BufferedImage roadImage;
     private BufferedImage wallImage;
@@ -44,8 +48,9 @@ public class player extends JPanel {
 
     //public player(monster m1) {
     //public player() {
-    public player(GamePanel gamePanel) {
+    public player(GamePanel gamePanel, backpage backpage) {
         this.gamePanel = gamePanel; // 保存GamePanel实例
+        this.backpage = backpage; // 保存backpage实例
         setFocusable(true);// 使面板能夠接收事件
         setLayout(null);
         setBackground(Color.GREEN);//只是讓我們方便看現在的地圖範圍而已
@@ -141,7 +146,7 @@ public class player extends JPanel {
 
     //玩家------------------------------------------------------
       // 移動玩家
-      private void movePlayer(int dx, int dy) {
+    private void movePlayer(int dx, int dy) {
         int newX = x + dx ;
         int newY = y + dy ;
 
@@ -337,6 +342,78 @@ public class player extends JPanel {
 
         repaint(); // 重畫面板
     }
-
+              
+    public void useItem(Object object){
+        if (object == null) {
+            return;
+        }
+        if (object instanceof JButton) {            
+            JButton btn = (JButton) object;                        
+            if (btn.getToolTipText().equals("道具一")) {
+                // 道具一                                            
+                useItem1();                    
+                
+            } else if (btn.getToolTipText().equals("道具二")) {
+                // 道具二
+                System.out.println("使用道具二");
+                useItem2();
+            }
+        }
+    }
+    private void useItem1() {
+        // 使用道具1，按完後可以選擇使用的地方，使0變1
+        boolean placeingItem = false;       // 是否正在放置道具
+        JLabel it1 = new JLabel(new ImageIcon("yellow1.gif"));
+        it1.setBounds(0, 0, 40, 40);
+        if (backpage.item1Num > 0 && !placeingItem) {
+            addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {     
+                    System.out.println("放置道具1");      
+                    int targetX = evt.getX() / cellSize;        // 獲取滑鼠點擊的位置
+                    int targetY = evt.getY() / cellSize;     
+                    if(map[targetX][targetY] == 0){
+                        map[targetX][targetY] = 1;        // 將地圖上的0變為1
+                        repaint();        // 重繪地圖
+                        return;  
+                    }                                           
+                }
+            });
+            // 道具一移動
+            addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+                public void mouseMoved(java.awt.event.MouseEvent evt) {
+                    System.out.println("道具一移動");
+                    it1.setLocation(evt.getX(), evt.getY());        // 道具一跟著滑鼠移動
+                }
+            });
+        }
+    }
+    private void useItem2(){
+        // 使用道具2，按完後可以選擇使用的地方，使1變0
+        boolean placeingItem = false;       // 是否正在放置道具
+        JLabel it2 = new JLabel(new ImageIcon("yellow1.gif"));
+        it2.setBounds(0, 0, 40, 40);
+        if (backpage.item2Num > 0 && !placeingItem) {
+            addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {     
+                    System.out.println("放置道具2");      
+                    int targetX = evt.getX() / cellSize;        // 獲取滑鼠點擊的位置
+                    int targetY = evt.getY() / cellSize;         
+                    if(map[targetX][targetY] == 1){
+                        map[targetX][targetY] = 0;        // 將地圖上的1變為0
+                        repaint();        // 重繪地圖
+                        return;  
+                    }
+                                      
+                }
+            });
+            // 道具二移動
+            addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+                public void mouseMoved(java.awt.event.MouseEvent evt) {
+                    System.out.println("道具二移動");
+                    it2.setLocation(evt.getX(), evt.getY());        // 道具二跟著滑鼠移動
+                }
+            });
+        }
+    }
     
 }
