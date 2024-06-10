@@ -16,7 +16,8 @@ public class player extends JPanel {
     private int panelWidth = 1100;
     private int panelHeight = 480;
 
-    private ImageIcon monster_img; // 怪獸圖片
+    private BufferedImage monster_img; // 怪獸圖片
+    private BufferedImage monster_img2;
     private int[] monster_x; // 怪獸位置
     private int[] monster_y; // 怪獸位置
     private int targetX, targetY; // 目標位置
@@ -32,6 +33,15 @@ public class player extends JPanel {
     private BufferedImage treasureOpenIMage;
     private BufferedImage playerIMage;
     private BufferedImage playerDeadIMage;
+    private BufferedImage m1_1;
+    private BufferedImage m1_2;
+    private BufferedImage m1_3;
+    private BufferedImage[] monsterImages;
+
+    private BufferedImage m2_1;
+    private BufferedImage m2_2;
+    private BufferedImage m2_3;
+    private BufferedImage[] monsterImages2;
 
     private int level_conut=1;
     static private int coinSum = 0; // 玩家金幣總數量
@@ -52,18 +62,22 @@ public class player extends JPanel {
     };
     private int[][] nextLevelMap = {
         {0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0},
-        {0, 1, 0, 0, 3, 0, 1, 0, 1, 0, 0},
-        {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0},
-        {0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+        {0, 1, 3, 0, 0, 0, 1, 0, 1, 0, 0},
+        {0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0},
+        {0, 1, 0, 0, 1, 2, 1, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
         {0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
-        {0, 1, 1, 1, 1, 1, 3, 0, 1, 1, 2}
+        {0, 1, 1, 1, 1, 1, 3, 0, 1, 1, 1}
     };
 
     private int[][] map;
     private int cellSize = 40; // 每個地圖單元格的大小
+
+    //計時器
+    private int timecount;
+    private Timer gameTimer;
 
     //public player(monster m1) {
     //public player() {
@@ -129,13 +143,28 @@ public class player extends JPanel {
         
 
         //關於怪獸-------------------------------------------
-
-        monster_img = new ImageIcon("monster1.gif"); // 加載怪獸圖片
-
-        // 檢查圖片是否加載成功
-        if (monster_img.getIconWidth() == -1) {
-            System.err.println("怪獸圖像加載失敗！");
+        try {
+            m1_1 = ImageIO.read(new File("monster1_1.png"));
+            m1_2 = ImageIO.read(new File("monster1_2.png"));
+            m1_3 = ImageIO.read(new File("monster1_3.png"));
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+        monster_img = m1_1; // 加載怪獸圖片
+        monsterImages=new BufferedImage[]{m1_1,m1_2,m1_3};
+
+        //-1怪獸------
+        try {
+            m2_1 = ImageIO.read(new File("monster2_1.png"));
+            m2_2 = ImageIO.read(new File("monster2_2.png"));
+            m2_3 = ImageIO.read(new File("monster2_3.png"));
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        monster_img2 = m2_1; // 加載怪獸圖片
+        monsterImages2=new BufferedImage[]{m2_1,m2_2,m2_3};
 
         //setFocusable(true); // 使面板能夠接收事件
 
@@ -167,6 +196,11 @@ public class player extends JPanel {
         }
 
         initLevel(initialMap);
+
+        // Initialize game timer 為了讓恐龍動起來!!
+        timecount = 0;
+        gameTimer = new Timer(500, e -> updateGameTime());
+        gameTimer.start();
     }
 
     //第一關-----------------------------------
@@ -182,8 +216,8 @@ public class player extends JPanel {
             monster_x = new int[]{7};
             monster_y = new int[]{6};
         } else if (newMap == nextLevelMap) {
-            monster_x = new int[]{7, 9};
-            monster_y = new int[]{6, 6};
+            monster_x = new int[]{7, 3};
+            monster_y = new int[]{6, 2};
         }
 
         chaseTimer.stop(); // 停止追蹤
@@ -299,15 +333,11 @@ public class player extends JPanel {
         gamePanel.gameOver(); // 调用gameOver方法结束游戏
     }
 
-    //----------------------------------------
-    private void updatePosition() {
-        // 確保玩家在範圍內
-        //x = Math.max(0, Math.min(x, panelWidth - player_img.getIconWidth()));
-        //y = Math.max(0, Math.min(y, panelHeight - player_img.getIconHeight()));
-
-        //System.out.println("x:" + x + " y:" + y);//玩家位置
-        repaint();
-        checkMonsterProximity();
+    
+    //計時器--------------------------------------------------------
+    private void updateGameTime() {
+        timecount++;
+        //System.out.println("游戏时间: " + timecount + "秒");
     }
 
     //畫玩家和怪獸和地圖和寶箱---------------------------------------------------
@@ -348,7 +378,10 @@ public class player extends JPanel {
    
            // 繪製怪物
         for (int i = 0; i < monster_x.length; i++) {
-            g2d.drawImage(monster_img.getImage(), offsetX + monster_x[i] * cellSize, offsetY + monster_y[i] * cellSize, cellSize, cellSize, this);
+            BufferedImage[] monsters=new BufferedImage[]{monster_img,monster_img2};
+            monster_img=monsterImages[timecount%3];//怪獸1(紅色
+            monster_img2=monsterImages2[timecount%3];//怪獸-1(藍色
+            g2d.drawImage(monsters[i], offsetX + monster_x[i] * cellSize, offsetY + monster_y[i] * cellSize, cellSize, cellSize, this);
         }
     }
     //怪獸的-------------------------------------------------------------
@@ -392,9 +425,7 @@ public class player extends JPanel {
                 monster_x[i]++;
             } else if (monster_x[i] > x) {
                 monster_x[i]--;
-            }
-
-            if (monster_y[i] < y) {
+            } else if (monster_y[i] < y) {
                 monster_y[i]++;
             } else if (monster_y[i] > y) {
                 monster_y[i]--;
