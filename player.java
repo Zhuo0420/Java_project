@@ -491,14 +491,25 @@ public class player extends JPanel {
     }
 
     //更改地圖的資訊(道具1適用)
-    private void changetoOne(int x,int y){
-        if (map[y-4][x-8] != 0) {   return; }
-        if(level_conut==1){//第一關
+    private void changetoOne(int x,int y){        
+        if(level_conut == 1){//第一關
+            if(map[y-4][x-8] != 0){
+                JOptionPane.showMessageDialog(this, "這裡不能放置道具");
+                return;
+            }
             map[y-4][x-8]=1;//(8,4)是map第一格(0,0)在視窗上的位子
             repaint();
         }
-
-        //代寫:第二關
+        else if(level_conut == 2)       // 第二關
+        {
+            if(map[y-3][x-8] != 0){
+                JOptionPane.showMessageDialog(this, "這裡不能放置道具");
+                return;
+            }
+            map[y-3][x-8] = 1;//(8,3)是map第一格(0,0)在視窗上的位子
+            repaint();
+        }
+        
     }
 
 
@@ -550,10 +561,22 @@ public class player extends JPanel {
             }
         });
     }
-    private void changetoZero(int x,int y){
-        if (map[y-4][x-8] != 1) {   return; }
+    private void changetoZero(int x,int y){        
         if(level_conut==1){//第一關
+            if(map[y-4][x-8] != 1){
+                JOptionPane.showMessageDialog(this, "這裡不能放置道具");
+                return;
+            }
             map[y-4][x-8] = 0;//(8,4)是map第一格(0,0)在視窗上的位子
+            repaint();
+        }
+        else if(level_conut == 2)       // 第二關
+        {
+            if(map[y-3][x-8] != 1){
+                JOptionPane.showMessageDialog(this, "這裡不能放置道具");
+                return;
+            }
+            map[y-3][x-8] = 0;//(8,3)是map第一格(0,0)在視窗上的位子
             repaint();
         }
         
