@@ -429,15 +429,21 @@ public class player extends JPanel {
     
 
 // 在類中定義placeingItem變量
-private boolean placingItem = true;
+public boolean placingItem = true;
+
 
 public void useItem1() {
     // 使用道具1，按完后可以选择使用的地方，使0变1
     JFrame it1 = new JFrame("道具1");
+    ImageIcon item1Icon = new ImageIcon("item1.png");       // 道具1的圖示
+    JLabel itemLabel = new JLabel(item1Icon);       // 用JLabel顯示道具1的圖示
+    it1.getContentPane().add(itemLabel);            // 將JLabel添加到JFrame中
     it1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     it1.setSize(40, 40); // 大小和cellsize一樣
     it1.setUndecorated(true); // 去掉窗口裝飾
-    it1.setBackground(Color.red);//可以改成item1的圖示，阿不知道為什麼紅色顯示不出來...
+    //it1 的 背景設為透明
+    it1.setBackground(new Color(0, 0, 0, 1));           // 設置背景 "幾乎" 為透明
+    //it1.setBackground(Color.red);//可以改成item1的圖示，阿不知道為什麼紅色顯示不出來...
     it1.setVisible(true);
     
 
@@ -445,7 +451,7 @@ public void useItem1() {
     java.awt.event.MouseMotionAdapter mouseMotionAdapter = new java.awt.event.MouseMotionAdapter() {
         public void mouseMoved(java.awt.event.MouseEvent evt) {
             if (placingItem) {
-                System.out.println("道具一移动");
+                System.out.println("道具一移動");
                 // 鼠標相對位置
                 Point mousePoint = evt.getLocationOnScreen();
                 // 設置it1的位置，使其跟随鼠标
@@ -460,11 +466,12 @@ public void useItem1() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (placingItem) {
                 System.out.println("放置道具1");
+                
                 // 印出滑鼠的位置(非map上的位置!!!!)
                 Point clickPoint = evt.getLocationOnScreen();
                 System.out.println("滑鼠點擊位置: " + clickPoint.x/cellSize + ", " + clickPoint.y/cellSize);
                 changetoOne(clickPoint.x/cellSize,clickPoint.y/cellSize);
-                // 用完道具舊設為看不到
+                // 用完道具就設為看不到
                 it1.setVisible(false);
                 placingItem = false;  // 放置完成后，設置為false，但我在想 if (placingItem) 這個條件到底是不是必須加的.....
                 // 移除監聽
@@ -475,7 +482,7 @@ public void useItem1() {
     });
 }
 
-    //更改必圖的資訊(道具1適用)
+    //更改地圖的資訊(道具1適用)
     private void changetoOne(int x,int y){
         if(level_conut==1){//第一關
             map[y-4][x-8]=1;//(8,4)是map第一格(0,0)在視窗上的位子

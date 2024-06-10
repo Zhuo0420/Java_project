@@ -40,14 +40,20 @@ public class backpage extends JPanel implements ActionListener{
             if(item1Num > 0){
                 item1Used = true;  
                 System.out.println("使用item1");
-                p.useItem1();              
+                p.placingItem = true;
+                p.useItem1();          
+                item1Num--;
             }
 
         }
         else if ( evt.getSource() == item2 ){
             //可以使用道具1，按完後可以選擇使用的地方，使1變0
-            if(item2Num > 0){                
+            if(item2Num > 0){    
                 item2Used = true;
+                System.out.println("使用item2");
+                p.placingItem = true;
+                //p.useItem2();            
+                item2Num--;
             }
         }
         

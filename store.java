@@ -57,7 +57,7 @@ public class store extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent evt) {
         if ( evt.getSource() == storebtn ){
             updateMoneyLabel();
-            
+            updateItemNum();
             //跳出選單視窗
             dialog.setVisible(true);
         }
@@ -95,5 +95,8 @@ public class store extends JPanel implements ActionListener {
             p.item2_count++;
             itemNum.setText("item1: " + backpage.item1Num + " item2: " + backpage.item2Num);
         }
+    }
+    public void updateItemNum(){
+        itemNum.setText("item1: " + backpage.item1Num + " item2: " + backpage.item2Num);
     }
 }
