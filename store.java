@@ -40,11 +40,11 @@ public class store extends JPanel implements ActionListener {
         JPanel itemsPanel = new JPanel(); 
         itemsPanel.setLayout(new GridLayout(1, 2));
 
-        item1 = new JButton(new ImageIcon("yellow1.gif")); // Initialize item1
+        item1 = new JButton(new ImageIcon("item1.png")); // Initialize item1
         item1.setToolTipText("0變1");
         item1.addActionListener(this);
         itemsPanel.add(item1);
-        item2 = new JButton(new ImageIcon("yellow1.gif"));
+        item2 = new JButton(new ImageIcon("item2.png"));
         item2.setToolTipText("1變0");
         item2.addActionListener(this);
         itemsPanel.add(item2);
