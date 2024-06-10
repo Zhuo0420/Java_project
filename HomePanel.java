@@ -34,9 +34,9 @@ public class HomePanel extends JPanel {
         layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
 
         //標題
-        title = new JButton(new ImageIcon(new ImageIcon("name.png").getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH)));
+        title = new JButton(new ImageIcon(new ImageIcon("name.png").getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
         title.setToolTipText("標題");
-        title.setPreferredSize(new Dimension(40, 40));
+        title.setPreferredSize(new Dimension(200, 200));
         title.setBorderPainted(false); // 移除按鈕邊框
         title.setContentAreaFilled(false); // 移除按鈕填充區域
         
@@ -66,7 +66,7 @@ public class HomePanel extends JPanel {
 
         title.setAlignmentX(Component.CENTER_ALIGNMENT); // 居中对齐
         rightPanel.add(title);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 20))); // 添加固定间距
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 添加固定间距
 
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT); // 居中对齐
         rightPanel.add(startButton);
