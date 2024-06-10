@@ -28,6 +28,7 @@ public class player extends JPanel {
 
     private BufferedImage roadImage;
     private BufferedImage wallImage;
+    private BufferedImage backWallImage;
     private BufferedImage doorImage;
     private BufferedImage treasureIMage;
     private BufferedImage treasureOpenIMage;
@@ -85,8 +86,8 @@ public class player extends JPanel {
         this.gamePanel = gamePanel; // 保存GamePanel实例
         //this.backpage = backpage; // 保存backpage实例
         setFocusable(true);// 使面板能夠接收事件
-        setLayout(null);
-        setBackground(Color.GREEN);//只是讓我們方便看現在的地圖範圍而已
+        setLayout(null);        
+        //setBackground(Color.GREEN);//只是讓我們方便看現在的地圖範圍而已
 
         //關於玩家------------------------------------------------
         //this.m1 = m1;
@@ -182,6 +183,7 @@ public class player extends JPanel {
         try {
             roadImage = ImageIO.read(new File("road_0000.png"));
             wallImage = ImageIO.read(new File("wall_0014.png"));
+            backWallImage = ImageIO.read(new File("backWall.png"));         // 背景牆
             doorImage = ImageIO.read(new File("door_0045.png"));
             treasureIMage = ImageIO.read(new File("treasure_0089.png"));
             treasureOpenIMage = ImageIO.read(new File("treasureopen_0091.png"));
@@ -345,6 +347,7 @@ public class player extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        paintBackground(g);
         Graphics2D g2d = (Graphics2D) g;
         int offsetX = (panelWidth - map[0].length * cellSize) / 2; // 計算地圖居中所需的偏移量
         int offsetY = (panelHeight - map.length * cellSize) / 2;
@@ -382,6 +385,19 @@ public class player extends JPanel {
             monster_img=monsterImages[timecount%3];//怪獸1(紅色
             monster_img2=monsterImages2[timecount%3];//怪獸-1(藍色
             g2d.drawImage(monsters[i], offsetX + monster_x[i] * cellSize, offsetY + monster_y[i] * cellSize, cellSize, cellSize, this);
+        }
+    }
+
+    // 繪製背景
+    public void paintBackground(Graphics g) {    
+        System.out.println("paintBackground");                  
+        if (backWallImage != null) {        
+            System.out.println("paintBackground in if");
+            for (int y = 0; y < getHeight(); y += cellSize) {
+                for (int x = 0; x < getWidth(); x += cellSize) {
+                    g.drawImage(backWallImage, x, y, cellSize, cellSize, this);
+                }
+            }
         }
     }
     //怪獸的-------------------------------------------------------------
