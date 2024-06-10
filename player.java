@@ -186,7 +186,7 @@ public class player extends JPanel {
             treasureIMage = ImageIO.read(new File("treasure_0089.png"));
             treasureOpenIMage = ImageIO.read(new File("treasureopen_0091.png"));
             playerIMage=ImageIO.read(new File("player1.png"));
-            playerDeadIMage=ImageIO.read(new File("player_daed.png"));
+            playerDeadIMage=ImageIO.read(new File("player_dead.png"));
 
             
             
