@@ -6,12 +6,14 @@ import java.applet.*;
 import javax.sound.sampled.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 
 public class GamePanel extends JFrame {
     private Clip clip;
     private JPanel homePanel;
     private JPanel gamePanel;
     private CardLayout cardLayout;
+    private BufferedImage wallImage;
 
     public GamePanel() {
         super("某某游戏");
@@ -74,26 +76,40 @@ public class GamePanel extends JFrame {
     }
 
     public void startGame() {
+        playSoundEffect("startGame.wav");
         cardLayout.show(getContentPane(), "Game");
     }
 
     //在menue按下home按鈕
     public void showHomePanel() {
+        playSoundEffect("startGame.wav");
+        if (clip.isActive()) {
+            System.out.println("stop");
+            clip.stop();
+            clip.close();            
+        }
         cardLayout.show(getContentPane(), "Home");
     }
 
     //在menue按下retry按鈕
-    public void restartGame() {
+    public void restartGame() {        
+        playSoundEffect("startGame.wav");
+        if (clip.isActive()) {
+            System.out.println("stop");
+            clip.stop();
+            clip.close();            
+        }
         gamePanel.removeAll();
         initGamePanel();
         cardLayout.show(getContentPane(), "Game");
         revalidate();
         repaint();
+        
     }
 
     private void playBackgroundMusic(String musicFilePath) {
         try {
-            File musicFile = new File(musicFilePath);
+            File musicFile = new File(getClass().getClassLoader().getResource(musicFilePath).getFile());
             if (musicFile.exists()) {
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
                 clip = AudioSystem.getClip();
@@ -109,6 +125,7 @@ public class GamePanel extends JFrame {
 
     //玩家被怪獸追到後要跳出GAME OVER視窗
     public void gameOver() {
+        playSoundEffect("hurt.wav");
         if (clip != null) {
             clip.stop();
             clip.close();
@@ -125,6 +142,20 @@ public class GamePanel extends JFrame {
         JOptionPane.showMessageDialog(this, "You Win!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
         System.exit(0); // 确保程序退出
     }
+
+    // 方法播放音效
+    private void playSoundEffect(String soundFilePath) {
+        try {
+            File soundFile = new File(getClass().getClassLoader().getResource(soundFilePath).getFile());
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         GamePanel app = new GamePanel();
