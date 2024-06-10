@@ -15,10 +15,10 @@ public class player extends JPanel {
     private int x, y;//玩家位置
     private int panelWidth = 1100;
     private int panelHeight = 480;
-    //private monster m1;
 
     private ImageIcon monster_img; // 怪獸圖片
-    private int m_x, m_y; // 怪獸位置
+    private int[] monster_x; // 怪獸位置
+    private int[] monster_y; // 怪獸位置
     private int targetX, targetY; // 目標位置
     private Timer chaseTimer; // 計時器，用於追蹤玩家
 
@@ -31,11 +31,12 @@ public class player extends JPanel {
     private BufferedImage treasureIMage;
     private BufferedImage treasureOpenIMage;
 
+    private int level_conut=1;
     static private int coinSum = 0; // 玩家金幣總數量
 
     // 地圖//只是隨便加一個地圖試試
     //0:路  1:牆  2:門  3:寶箱
-    private int[][] map = {
+    private int[][] initialMap = {
         {0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2},
         {0, 1, 3, 0, 0, 3, 1, 0, 1, 1, 0},
         {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0},
@@ -44,6 +45,19 @@ public class player extends JPanel {
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
     };
+    private int[][] nextLevelMap = {
+        {0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0},
+        {0, 1, 0, 0, 3, 0, 1, 0, 1, 0, 0},
+        {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+        {0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
+        {0, 1, 1, 1, 1, 1, 3, 0, 1, 1, 2}
+    };
+
+    private int[][] map;
     private int cellSize = 40; // 每個地圖單元格的大小
 
     //public player(monster m1) {
@@ -107,6 +121,7 @@ public class player extends JPanel {
                 movePlayer(1, 0);
             }
         });
+        
 
         //關於怪獸-------------------------------------------
 
@@ -122,8 +137,8 @@ public class player extends JPanel {
         // 初始化怪獸位置
         //m_x = 300;
         //m_y = 300;
-        m_x=7;
-        m_y=6;
+        monster_x = new int[]{7};
+        monster_y = new int[]{6};
 
         // 初始化計時器，每500毫秒執行一次chase方法
         chaseTimer = new Timer(500, e -> chase());
@@ -142,6 +157,29 @@ public class player extends JPanel {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
+        initLevel(initialMap);
+    }
+
+    //第一關-----------------------------------
+    private void initLevel(int[][] newMap) {
+        map = new int[newMap.length][newMap[0].length];
+        for (int i = 0; i < newMap.length; i++) {
+            System.arraycopy(newMap[i], 0, map[i], 0, newMap[i].length);
+        }
+        x = 0;
+        y = 0;
+
+        if (newMap == initialMap) {
+            monster_x = new int[]{7};
+            monster_y = new int[]{6};
+        } else if (newMap == nextLevelMap) {
+            monster_x = new int[]{7, 9};
+            monster_y = new int[]{6, 6};
+        }
+
+        chaseTimer.stop(); // 停止追蹤
+        repaint();
     }
 
     //玩家------------------------------------------------------
@@ -155,15 +193,20 @@ public class player extends JPanel {
             x = newX;
             y = newY;
 
-            // 檢查是否到達終點
+            // 检查是否到达终点
             if (map[y][x] == 2) {
-                gamePanel.gameWin();
-            }
-
-            //寶箱觸發事件
-            if (map[y][x] == 3) {
+                if (level_conut==1) {
+                    chaseTimer.stop(); 
+                    initLevel(nextLevelMap); // 进入下一关
+                    level_conut++;
+                } else {
+                    System.out.println("兩關完結");
+                    gamePanel.gameWin(); // 通关
+                }
+            } else if (map[y][x] == 3) {
+                // 宝箱触发事件
                 treasure_event();
-                map[y][x] = 4;//標記寶箱為開過
+                map[y][x] = 4; // 标记宝箱为开过
             }
 
             System.out.println("x:" + x + " y:" + y); // 玩家位置
@@ -176,7 +219,7 @@ public class player extends JPanel {
     private void treasure_event(){
         Random rand = new Random();
         int outcome = rand.nextInt(10); // 隨機生成0~9
-        if(x==2&& y==1)outcome=0;//為了demo時的寶箱怪設置的
+        //if(x==2&& y==1)outcome=0;//為了demo時的寶箱怪設置的
 
         if (outcome == 0) {
             // 10%的概率出現寶箱怪
@@ -260,45 +303,47 @@ public class player extends JPanel {
     }
 
     //畫玩家和怪獸和地圖和寶箱---------------------------------------------------
+       // 繪製遊戲地圖和角色
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Insets ins = getInsets();
-
+        Graphics2D g2d = (Graphics2D) g;
+        int offsetX = (panelWidth - map[0].length * cellSize) / 2; // 計算地圖居中所需的偏移量
+        int offsetY = (panelHeight - map.length * cellSize) / 2;
+   
         // 繪製地圖
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                BufferedImage img;
-                if (map[i][j] == 1) {
-                    img = wallImage;
-                } else if (map[i][j] == 2) {//門
-                    img=doorImage;
-                } else if (map[i][j] == 3) {//還沒開過的寶箱
-                    img=treasureIMage;
-                }else if (map[i][j] == 4) {//開過的寶箱
-                    img=treasureOpenIMage;
-                } else {
-                    img = roadImage;
+        for (int row = 0; row < map.length; row++) {
+            for (int col = 0; col < map[row].length; col++) {
+                int cell = map[row][col];
+                switch (cell) {
+                    case 0:
+                        g2d.drawImage(roadImage, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
+                        break;
+                    case 1:
+                        g2d.drawImage(wallImage, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
+                        break;
+                    case 2:
+                        g2d.drawImage(doorImage, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
+                        break;
+                    case 3:
+                        g2d.drawImage(treasureIMage, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
+                        break;
+                    case 4:
+                        g2d.drawImage(treasureOpenIMage, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
+                        break;
                 }
-                g.drawImage(img, j * cellSize, i * cellSize, cellSize, cellSize, null);
             }
+        }   
+   
+           // 繪製玩家
+        g2d.drawImage(player_img.getImage(), offsetX + x * cellSize, offsetY + y * cellSize, cellSize, cellSize, this);
+   
+           // 繪製怪物
+        for (int i = 0; i < monster_x.length; i++) {
+            g2d.drawImage(monster_img.getImage(), offsetX + monster_x[i] * cellSize, offsetY + monster_y[i] * cellSize, cellSize, cellSize, this);
         }
-
-        player_img.paintIcon(this, g, x*cellSize + ins.left, y*cellSize + ins.top);
-        monster_img.paintIcon(this, g, m_x*cellSize + ins.left, m_y*cellSize + ins.top);
     }
-
     //怪獸的-------------------------------------------------------------
-
-    private void checkMonsterProximity() {
-        // 檢查玩家位置是否在怪獸的位置+-2，如果是就追
-        System.out.println("monster x:"+m_y+"y:"+m_x);//怪獸位置
-        if (Math.abs(x - m_x) <= 2 && Math.abs(y - m_y) <= 2) {
-            startChasing(x, y);
-        } else {
-            stopChasing();
-        }
-    }
 
 
     // 開始追蹤玩家
@@ -312,37 +357,55 @@ public class player extends JPanel {
     public void stopChasing() {
         chaseTimer.stop(); // 停止計時器
     }
+     // 計算怪物到玩家的距離
+    private void checkMonsterProximity() {
+        boolean isChasing = false;
+        for (int i = 0; i < monster_x.length; i++) {
+            double distance = Math.sqrt(Math.pow(monster_x[i] - x, 2) + Math.pow(monster_y[i] - y, 2));
+            if (distance <= 3.0) {
+                isChasing = true;
+                break;
+            }
+        }
+
+        if (isChasing) {
+            chaseTimer.start();
+        } else {
+            chaseTimer.stop();
+        }
+    }
 
     // 追蹤方法，更新怪獸位置
     private void chase() {
-        int orginal_m_x=m_x;
-        int orginal_m_y=m_y;
-        if (m_x < targetX) {
-            m_x += 1;
-        } else if (m_x > targetX) {
-            m_x -= 1;
+        for (int i = 0; i < monster_x.length; i++) {
+            int o_x=monster_x[i];
+            int o_y=monster_y[i];
+            if (monster_x[i] < x) {
+                monster_x[i]++;
+            } else if (monster_x[i] > x) {
+                monster_x[i]--;
+            }
+
+            if (monster_y[i] < y) {
+                monster_y[i]++;
+            } else if (monster_y[i] > y) {
+                monster_y[i]--;
+            }
+
+            map[o_y][o_x]=1;
+
+            // 當怪物接觸到玩家
+            if (monster_x[i] == x && monster_y[i] == y) {
+                gamePanel.gameOver();
+                chaseTimer.stop();
+                break;
+            }
+            
         }
-        else if (m_y < targetY) {
-            m_y += 1;
-        } else if (m_y > targetY) {
-            m_y -= 1;
-        }
-
-        
-       
-         // 檢查怪獸是否抓住玩家
-        if (m_x == x && m_y == y) {
-            repaint();
-            gamePanel.gameOver(); // 调用GamePanel中的gameOver方法
-        }
-
-
-        //路變牆
-        map[orginal_m_y][orginal_m_x]=1;
-
-        repaint(); // 重畫面板
+        repaint();
     }
-              
+    
+    /* 
     public void useItem(Object object){
         if (object == null) {
             return;
@@ -414,6 +477,6 @@ public class player extends JPanel {
                 }
             });
         }
-    }
+    }*/
     
 }
