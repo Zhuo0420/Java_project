@@ -31,10 +31,11 @@ public class GamePanel extends JFrame {
     private void initGamePanel() {
         // monster m1 = new monster();
         // player character = new player(m1);
-        backpage b = new backpage();
-        player character = new player(this, b);
+        //backpage b = new backpage();
+        player character = new player(this);
+        backpage b = new backpage(character);
         MenueTable m = new MenueTable(this,character);
-        store s = new store(b);
+        store s = new store(b,character);
         
 
         JLayeredPane layeredPane = new JLayeredPane();

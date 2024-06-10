@@ -34,6 +34,9 @@ public class player extends JPanel {
     private int level_conut=1;
     static private int coinSum = 0; // 玩家金幣總數量
 
+    public int item1_count=0;
+    public int item2_count=0;
+
     // 地圖//只是隨便加一個地圖試試
     //0:路  1:牆  2:門  3:寶箱
     private int[][] initialMap = {
@@ -62,9 +65,9 @@ public class player extends JPanel {
 
     //public player(monster m1) {
     //public player() {
-    public player(GamePanel gamePanel, backpage backpage) {
+    public player(GamePanel gamePanel) {
         this.gamePanel = gamePanel; // 保存GamePanel实例
-        this.backpage = backpage; // 保存backpage实例
+        //this.backpage = backpage; // 保存backpage实例
         setFocusable(true);// 使面板能夠接收事件
         setLayout(null);
         setBackground(Color.GREEN);//只是讓我們方便看現在的地圖範圍而已
@@ -405,7 +408,7 @@ public class player extends JPanel {
         repaint();
     }
     
-    /* 
+    
     public void useItem(Object object){
         if (object == null) {
             return;
@@ -423,33 +426,67 @@ public class player extends JPanel {
             }
         }
     }
-    private void useItem1() {
-        // 使用道具1，按完後可以選擇使用的地方，使0變1
-        boolean placeingItem = false;       // 是否正在放置道具
-        JLabel it1 = new JLabel(new ImageIcon("yellow1.gif"));
-        it1.setBounds(0, 0, 40, 40);
-        if (backpage.item1Num > 0 && !placeingItem) {
-            addMouseListener(new java.awt.event.MouseAdapter() {
-                public void mouseClicked(java.awt.event.MouseEvent evt) {     
-                    System.out.println("放置道具1");      
-                    int targetX = evt.getX() / cellSize;        // 獲取滑鼠點擊的位置
-                    int targetY = evt.getY() / cellSize;     
-                    if(map[targetX][targetY] == 0){
-                        map[targetX][targetY] = 1;        // 將地圖上的0變為1
-                        repaint();        // 重繪地圖
-                        return;  
-                    }                                           
-                }
-            });
-            // 道具一移動
-            addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-                public void mouseMoved(java.awt.event.MouseEvent evt) {
-                    System.out.println("道具一移動");
-                    it1.setLocation(evt.getX(), evt.getY());        // 道具一跟著滑鼠移動
-                }
-            });
+    
+
+// 在類中定義placeingItem變量
+private boolean placingItem = true;
+
+public void useItem1() {
+    // 使用道具1，按完后可以选择使用的地方，使0变1
+    JFrame it1 = new JFrame("道具1");
+    it1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    it1.setSize(40, 40); // 大小和cellsize一樣
+    it1.setUndecorated(true); // 去掉窗口裝飾
+    it1.setBackground(Color.red);//可以改成item1的圖示，阿不知道為什麼紅色顯示不出來...
+    it1.setVisible(true);
+    
+
+    // 道具一移動
+    java.awt.event.MouseMotionAdapter mouseMotionAdapter = new java.awt.event.MouseMotionAdapter() {
+        public void mouseMoved(java.awt.event.MouseEvent evt) {
+            if (placingItem) {
+                System.out.println("道具一移动");
+                // 鼠標相對位置
+                Point mousePoint = evt.getLocationOnScreen();
+                // 設置it1的位置，使其跟随鼠标
+                it1.setLocation(mousePoint.x, mousePoint.y);
+            }
         }
+    };
+    addMouseMotionListener(mouseMotionAdapter);
+
+    // 在it1內滑鼠點擊事件
+    it1.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            if (placingItem) {
+                System.out.println("放置道具1");
+                // 印出滑鼠的位置(非map上的位置!!!!)
+                Point clickPoint = evt.getLocationOnScreen();
+                System.out.println("滑鼠點擊位置: " + clickPoint.x/cellSize + ", " + clickPoint.y/cellSize);
+                changetoOne(clickPoint.x/cellSize,clickPoint.y/cellSize);
+                // 用完道具舊設為看不到
+                it1.setVisible(false);
+                placingItem = false;  // 放置完成后，設置為false，但我在想 if (placingItem) 這個條件到底是不是必須加的.....
+                // 移除監聽
+                removeMouseListener(this);
+                removeMouseMotionListener(mouseMotionAdapter);
+            }
+        }
+    });
+}
+
+    //更改必圖的資訊(道具1適用)
+    private void changetoOne(int x,int y){
+        if(level_conut==1){//第一關
+            map[y-4][x-8]=1;//(8,4)是map第一格(0,0)在視窗上的位子
+            repaint();
+        }
+
+        //代寫:第二關
     }
+
+
+    
     private void useItem2(){
         // 使用道具2，按完後可以選擇使用的地方，使1變0
         boolean placeingItem = false;       // 是否正在放置道具
@@ -477,6 +514,6 @@ public class player extends JPanel {
                 }
             });
         }
-    }*/
+    }
     
 }

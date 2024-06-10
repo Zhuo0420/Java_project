@@ -12,8 +12,10 @@ public class store extends JPanel implements ActionListener {
     private JLabel itemNum = new JLabel("item1: 0" + " item2: 0"); 
 
     private backpage backpage;      // 道具欄
+    private player p;
 
-    public store(backpage backpage){
+    public store(backpage backpage,player p){
+        this.p=p;
         this.backpage = backpage;    // 道具欄
         setFocusable(true);
         setLayout(new FlowLayout(FlowLayout.RIGHT));        
@@ -79,7 +81,8 @@ public class store extends JPanel implements ActionListener {
         //設 item 1 的價格為 10
         if (coinSum >= 2){                 
             player.setCoinSum(coinSum - 2);
-            backpage.item1Num++;            
+            backpage.item1Num++;    
+            p.item1_count++;        
             itemNum.setText("item1: " + backpage.item1Num + " item2: " + backpage.item2Num);
         }
     }
@@ -89,6 +92,7 @@ public class store extends JPanel implements ActionListener {
         if (coinSum >= 2){                 
             player.setCoinSum(coinSum - 2);
             backpage.item2Num++;
+            p.item2_count++;
             itemNum.setText("item1: " + backpage.item1Num + " item2: " + backpage.item2Num);
         }
     }

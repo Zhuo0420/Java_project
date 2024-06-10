@@ -11,8 +11,12 @@ public class backpage extends JPanel implements ActionListener{
 
     boolean item1Used = false;
     boolean item2Used = false;
+    player p;
 
-    public backpage(){
+    public backpage(player p){
+        this.p=p;
+        item1Num=p.item1_count;
+        item2Num=p.item2_count;
         setFocusable(true);
         setLayout(new FlowLayout(FlowLayout.RIGHT));
         setBackground(Color.GRAY);
@@ -34,8 +38,11 @@ public class backpage extends JPanel implements ActionListener{
         if ( evt.getSource() == item1 ){
             //可以使用道具1，按完後可以選擇使用的地方，使0變1
             if(item1Num > 0){
-                item1Used = true;                
+                item1Used = true;  
+                System.out.println("使用item1");
+                p.useItem1();              
             }
+
         }
         else if ( evt.getSource() == item2 ){
             //可以使用道具1，按完後可以選擇使用的地方，使1變0
