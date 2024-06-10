@@ -52,7 +52,7 @@ public class backpage extends JPanel implements ActionListener{
                 item2Used = true;
                 System.out.println("使用item2");
                 p.placingItem = true;
-                //p.useItem2();            
+                p.useItem2();            
                 item2Num--;
             }
         }
