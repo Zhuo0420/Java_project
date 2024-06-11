@@ -246,10 +246,13 @@ public class player extends JPanel {
             if (map[y][x] == 2) {
                 if (level_conut==1) {
                     chaseTimer.stop(); 
+                    Story story = new Story();
+                    story.setVisible(true);
                     initLevel(nextLevelMap); // 进入下一关
                     level_conut++;
                 } else {
                     System.out.println("兩關完結");
+                    chaseTimer.stop(); 
                     gamePanel.gameWin(); // 通关
                 }
             } else if (map[y][x] == 3) {
