@@ -263,7 +263,7 @@ public class player extends JPanel {
 
             System.out.println("x:" + x + " y:" + y); // 玩家位置
             repaint();
-            checkMonsterProximity();
+            checkMonsterProximity();        // 检查怪物是否靠近
         }
     }
 
@@ -399,9 +399,9 @@ public class player extends JPanel {
 
     // 繪製背景
     public void paintBackground(Graphics g) {    
-        System.out.println("paintBackground");                  
+        //System.out.println("paintBackground");                  
         if (backWallImage != null) {        
-            System.out.println("paintBackground in if");
+            //System.out.println("paintBackground in if");
             for (int y = 0; y < getHeight(); y += cellSize) {
                 for (int x = 0; x < getWidth(); x += cellSize) {
                     g.drawImage(backWallImage, x, y, cellSize, cellSize, this);
@@ -442,15 +442,19 @@ public class player extends JPanel {
         for (int i = 0; i < monster_x.length; i++) {
             double distance = Math.sqrt(Math.pow(monster_x[i] - x, 2) + Math.pow(monster_y[i] - y, 2));
             if (distance <= 3.0) {
+                System.out.println("怪物" + i + "距離玩家" + distance);
                 isChasing = true;
                 break;
             }
         }
 
         if (isChasing) {
-            chaseTimer.start();
-        } else {
-            chaseTimer.stop();
+            System.out.println("怪物開始追蹤玩家");
+            //chaseTimer.start();
+            startChasing(x, y);
+        } else {            
+            //chaseTimer.stop();
+            stopChasing();
         }
     }
 
@@ -460,31 +464,34 @@ public class player extends JPanel {
             int o_x=monster_x[i];
             int o_y=monster_y[i];
             if(i==0){//怪獸1，不可穿牆
-                if (monster_x[i] < x && map[monster_y[i]][monster_x[i]+1]!=1) {
+                if ((o_x + 1) < map[0].length && monster_x[i] < x && map[monster_y[i]][monster_x[i]+1]!=1) {
                     monster_x[i]++;
-                } else if (monster_x[i] > x && map[monster_y[i]][monster_x[i]-1]!=1) {
+                    System.out.println("怪獸1向右移動" + monster_x[i] + " " + monster_y[i] + " " + x + " " + y);
+                } else if ((o_x - 1) >= 0 && monster_x[i] > x && map[monster_y[i]][monster_x[i]-1]!=1){
                     monster_x[i]--;
-                } else if (monster_y[i] < y && map[monster_y[i]+1][monster_x[i]]!=1) {
+                    System.out.println("怪獸1向左移動" + monster_x[i] + " " + monster_y[i] + " " + x + " " + y);
+                } else if ((o_y + 1) < map.length && monster_y[i] < y && map[monster_y[i]+1][monster_x[i]]!=1) {
                     monster_y[i]++;
-                } else if (monster_y[i] > y && map[monster_y[i]-1][monster_x[i]++]!=1) {
+                    System.out.println("怪獸1向下移動" + monster_x[i] + " " + monster_y[i] + " " + x + " " + y);
+                } else if ((o_y - 1) >= 0 && monster_y[i] > y && map[monster_y[i]-1][monster_x[i]+1]!=1){
                     monster_y[i]--;
+                    System.out.println("怪獸1向上移動" + monster_x[i] + " " + monster_y[i] + " " + x + " " + y);
                 }
                 else{
 
                 }
             }
-            else{//怪獸-1
-                
-                    if (monster_x[i] < x) {
-                        monster_x[i]++;
-                    } else if (monster_x[i] > x ) {
-                        monster_x[i]--;
-                    } else if (monster_y[i] < y ) {
-                        monster_y[i]++;
-                    } else if (monster_y[i] > y ) {
-                        monster_y[i]--;
-                    }
-                }    
+            else{//怪獸-1                
+                if (monster_x[i] < x) {
+                    monster_x[i]++;
+                } else if (monster_x[i] > x ) {
+                    monster_x[i]--;
+                } else if (monster_y[i] < y ) {
+                    monster_y[i]++;
+                } else if (monster_y[i] > y ) {
+                    monster_y[i]--;
+                }
+            }    
 
             if(i==0 && map[o_y][o_x]!=2)map[o_y][o_x]=1;//怪獸1
             else if(i==1 && map[o_y][o_x]!=2)  map[o_y][o_x]=0;//怪獸-1
