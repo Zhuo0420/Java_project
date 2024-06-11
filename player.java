@@ -70,8 +70,8 @@ public class player extends JPanel {
         {0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0},
         {0, 1, 3, 0, 0, 0, 1, 0, 1, 0, 0},
         {0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0},
-        {0, 1, 0, 0, 1, 2, 1, 0, 0, 0, 0},
-        {0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0},
+        {0, 1, 1, 0, 1, 2, 1, 0, 0, 0, 0},
+        {0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
         {0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
@@ -272,7 +272,7 @@ public class player extends JPanel {
         playSoundEffect("openBox.wav");
         Random rand = new Random();
         int outcome = rand.nextInt(10); // 隨機生成0~9
-        //if(x==2&& y==1)outcome=0;//為了demo時的寶箱怪設置的
+        if(x==2&& y==1)outcome=0;//為了demo時的寶箱怪設置的
 
         if (outcome == 0) {
             // 10%的概率出現寶箱怪
@@ -459,18 +459,35 @@ public class player extends JPanel {
         for (int i = 0; i < monster_x.length; i++) {
             int o_x=monster_x[i];
             int o_y=monster_y[i];
-            if (monster_x[i] < x) {
-                monster_x[i]++;
-            } else if (monster_x[i] > x) {
-                monster_x[i]--;
-            } else if (monster_y[i] < y) {
-                monster_y[i]++;
-            } else if (monster_y[i] > y) {
-                monster_y[i]--;
-            }
+            if(i==0){//怪獸1，不可穿牆
+                if (monster_x[i] < x && map[monster_y[i]][monster_x[i]+1]!=1) {
+                    monster_x[i]++;
+                } else if (monster_x[i] > x && map[monster_y[i]][monster_x[i]-1]!=1) {
+                    monster_x[i]--;
+                } else if (monster_y[i] < y && map[monster_y[i]+1][monster_x[i]]!=1) {
+                    monster_y[i]++;
+                } else if (monster_y[i] > y && map[monster_y[i]-1][monster_x[i]++]!=1) {
+                    monster_y[i]--;
+                }
+                else{
 
-            if(i==0)map[o_y][o_x]=1;//怪獸1
-            else  map[o_y][o_x]=0;//怪獸-1
+                }
+            }
+            else{//怪獸-1
+                
+                    if (monster_x[i] < x) {
+                        monster_x[i]++;
+                    } else if (monster_x[i] > x ) {
+                        monster_x[i]--;
+                    } else if (monster_y[i] < y ) {
+                        monster_y[i]++;
+                    } else if (monster_y[i] > y ) {
+                        monster_y[i]--;
+                    }
+                }    
+
+            if(i==0 && map[o_y][o_x]!=2)map[o_y][o_x]=1;//怪獸1
+            else if(i==1 && map[o_y][o_x]!=2)  map[o_y][o_x]=0;//怪獸-1
             
 
             // 當怪物接觸到玩家
