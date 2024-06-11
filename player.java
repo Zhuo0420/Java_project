@@ -471,7 +471,7 @@ public class player extends JPanel {
             
 
             // 當怪物接觸到玩家
-            if (monster_x[i] == x && monster_y[i] == y) {
+            if (monster_x[i] == x && monster_y[i] == y && !gamePanel.getWin()) {
                 //player_img = new ImageIcon("player_dead.png");
                 gamePanel.gameOver();
                 chaseTimer.stop();

@@ -14,6 +14,7 @@ public class GamePanel extends JFrame {
     private JPanel gamePanel;
     private CardLayout cardLayout;
     private BufferedImage wallImage;
+    private boolean Win = false;
 
     public GamePanel() {
         super("某某游戏");
@@ -82,12 +83,7 @@ public class GamePanel extends JFrame {
 
     //在menue按下home按鈕
     public void showHomePanel() {
-        playSoundEffect("startGame.wav");
-        if (clip.isActive()) {
-            System.out.println("stop");
-            clip.stop();
-            clip.close();            
-        }
+        playSoundEffect("startGame.wav");                                
         cardLayout.show(getContentPane(), "Home");
     }
 
@@ -95,7 +91,7 @@ public class GamePanel extends JFrame {
     public void restartGame() {        
         playSoundEffect("startGame.wav");
         if (clip.isActive()) {
-            System.out.println("stop");
+            System.out.println("stop music in retry btn");
             clip.stop();
             clip.close();            
         }
@@ -135,6 +131,7 @@ public class GamePanel extends JFrame {
     }
 
     public void gameWin() {
+        Win = true;
         if (clip != null) {
             clip.stop();
             clip.close();
@@ -155,7 +152,9 @@ public class GamePanel extends JFrame {
             e.printStackTrace();
         }
     }
-
+    public boolean getWin(){
+        return Win;
+    }
 
     public static void main(String[] args) {
         GamePanel app = new GamePanel();
