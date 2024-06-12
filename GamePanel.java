@@ -127,7 +127,12 @@ public class GamePanel extends JFrame {
             clip.close();
         }
         JOptionPane.showMessageDialog(this, "Game Over!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-        System.exit(0); 
+        //System.exit(0); 
+        gamePanel.removeAll();
+        initGamePanel();
+        cardLayout.show(getContentPane(), "Game");
+        revalidate();
+        repaint();
     }
 
     public void gameWin() {
