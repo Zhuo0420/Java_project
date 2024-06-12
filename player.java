@@ -32,6 +32,7 @@ public class player extends JPanel {
     private backpage backpage; // 引用backpage实例
 
     private BufferedImage roadImage;
+    private BufferedImage roadImage2;
     private BufferedImage wallImage;
     private BufferedImage backWallImage;
     private BufferedImage doorImage;
@@ -206,6 +207,7 @@ public class player extends JPanel {
         // 地圖圖片
         try {
             roadImage = ImageIO.read(new File("road_0000.png"));
+            roadImage2 = ImageIO.read(new File("road2.png"));
             wallImage = ImageIO.read(new File("wall_0014.png"));
             backWallImage = ImageIO.read(new File("backWall.png"));         // 背景牆
             doorImage = ImageIO.read(new File("door_0045.png"));
@@ -387,7 +389,8 @@ public class player extends JPanel {
                 int cell = map[row][col];
                 switch (cell) {
                     case 0:
-                        g2d.drawImage(roadImage, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
+                        if((row+col)==0)g2d.drawImage(roadImage2, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
+                        else g2d.drawImage(roadImage, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
                         break;
                     case 1:
                         g2d.drawImage(wallImage, offsetX + col * cellSize, offsetY + row * cellSize, cellSize, cellSize, this);
