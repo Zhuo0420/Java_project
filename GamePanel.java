@@ -17,7 +17,7 @@ public class GamePanel extends JFrame {
     private boolean Win = false;
 
     public GamePanel() {
-        super("某某游戏");
+        super("關於我轉生成異世界建築師這檔事");
         cardLayout = new CardLayout();
         setLayout(cardLayout);
 

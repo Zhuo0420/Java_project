@@ -348,6 +348,7 @@ public class player extends JPanel {
     //計時器--------------------------------------------------------
     private void updateGameTime() {
         timecount++;
+        repaint();
         //System.out.println("游戏时间: " + timecount + "秒");
     }
 
