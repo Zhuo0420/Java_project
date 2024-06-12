@@ -493,7 +493,7 @@ public class player extends JPanel {
                 } else if ((o_y + 1) < map.length && monster_y[i] < y && map[monster_y[i]+1][monster_x[i]]!=1) {
                     monster_y[i]++;
                     System.out.println("怪獸1向下移動" + monster_x[i] + " " + monster_y[i] + " " + x + " " + y);
-                } else if ((o_y - 1) >= 0 && monster_y[i] > y && map[monster_y[i]-1][monster_x[i]+1]!=1){
+                } else if ((o_y - 1) >= 0 && monster_y[i] > y && map[monster_y[i]-1][monster_x[i]]!=1){
                     monster_y[i]--;
                     System.out.println("怪獸1向上移動" + monster_x[i] + " " + monster_y[i] + " " + x + " " + y);
                 }
