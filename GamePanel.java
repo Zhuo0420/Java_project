@@ -131,6 +131,7 @@ public class GamePanel extends JFrame {
     }
 
     public void gameWin() {
+        playSoundEffect("V.wav");
         Win = true;
         if (clip != null) {
             clip.stop();
