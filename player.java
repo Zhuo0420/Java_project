@@ -49,6 +49,13 @@ public class player extends JPanel {
     private BufferedImage m2_3;
     private BufferedImage[] monsterImages2;
 
+    private BufferedImage p1;
+    private BufferedImage p2;
+    private BufferedImage p3;
+    private BufferedImage p4;
+    private BufferedImage p5;
+    private BufferedImage[] playerImages;
+
     private int level_conut=1;
     static private int coinSum = 0; // 玩家金幣總數量
 
@@ -96,12 +103,24 @@ public class player extends JPanel {
 
         //關於玩家------------------------------------------------
         //this.m1 = m1;
-        player_img = new ImageIcon("player1.png");
+        try {
+            p1 = ImageIO.read(new File("player1.png"));
+            p2 = ImageIO.read(new File("player2.png"));
+            p3 = ImageIO.read(new File("player3.png"));
+            p4 = ImageIO.read(new File("player4.png"));
+            p5 = ImageIO.read(new File("player5.png"));
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        playerIMage=p1;
+        playerImages=new BufferedImage[]{p1,p2,p3,p4,p5};
+        //player_img = new ImageIcon("player1.png");
 
         // 檢查玩家圖片是否加載成功
-        if (player_img.getIconWidth() == -1) {
-            System.err.println("玩家图像加载失败！");
-        }
+        //if (player_img.getIconWidth() == -1) {
+        //    System.err.println("玩家图像加载失败！");
+        //}
 
         //玩家的初始位置:右下角
         //x = 10;
@@ -387,7 +406,7 @@ public class player extends JPanel {
         }   
    
            // 繪製玩家
-        g2d.drawImage(player_img.getImage(), offsetX + x * cellSize, offsetY + y * cellSize, cellSize, cellSize, this);
+        g2d.drawImage(playerImages[timecount%5], offsetX + x * cellSize, offsetY + y * cellSize, cellSize, cellSize, this);
    
            // 繪製怪物
         for (int i = 0; i < monster_x.length; i++) {
